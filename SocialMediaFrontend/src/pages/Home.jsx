@@ -17,7 +17,7 @@ function Home({setToken}) {
             return;
         }
 
-        const response = await fetch("http://localhost:3200/api/posts", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/posts`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -54,7 +54,7 @@ if (!message.trim()) {
 
         const token = localStorage.getItem("token");
 
-        const response = await fetch("http://localhost:3200/api/posts", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/posts`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -78,7 +78,7 @@ if (!message.trim()) {
     const handleDelete = async (postId) => {
         const token = localStorage.getItem("token");
         const response = await fetch (
-            `http://localhost:3200/api/posts/${postId}`,
+    `${import.meta.env.VITE_API_URL}/api/posts/${postId}`,
             {
                 method: "DELETE",
                 headers: {
