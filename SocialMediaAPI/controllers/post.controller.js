@@ -11,10 +11,12 @@ export const createPost = async (req, res)=> {
         });
     }
 
-    const posts = await Post.create({
-        user: userId,
-        message: message
+    const post = await Post.create({
+      user: userId,
+      message: message,
     });
+
+    const posts = await Post.findById(post._id).populate("user", "name");
 
     res.status(201).json({
         message: "Post created successfully",
@@ -23,12 +25,25 @@ export const createPost = async (req, res)=> {
 };
 
 export const getPosts = async (req, res) => {
-    const posts = await Post.find();
+  const posts = await Post.find().populate("user", "name");
 
-    res.status(200).json({
-        posts
-    });
+  res.status(200).json({
+    posts,
+  });
 };
+
+export const getMyPosts = async (req, res) => {
+  const userId = req.userId;
+
+  const posts = await Post.find({ user: userId });
+
+  res.status(200).json({
+    posts,
+  });
+};
+
+
+
 
 export const getPostById = async (req, res) => {
     const post = await Post.findById(req.params.id);

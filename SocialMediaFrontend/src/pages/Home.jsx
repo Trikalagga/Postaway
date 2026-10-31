@@ -43,7 +43,23 @@ function Home({setToken}) {
     };
 
     fetchPosts();
-}, []);    
+}, []);
+
+useEffect(() => {
+    if (!statusMessage) {
+        return;
+    }
+
+    const timer = setTimeout(() => {
+        setStatusMessage("");
+    }, 3000);
+
+    return () => clearTimeout(timer);
+}, [statusMessage]);
+
+
+
+
 
     const handleSubmit = async () => {
         
@@ -54,6 +70,13 @@ if (!message.trim()) {
 
         const token = localStorage.getItem("token");
 
+        if (!token) {
+    setStatusMessage(
+        "Sorry, mate! You need to log in or register first to create a post."
+    );
+    return;
+}
+
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/posts`, {
             method: "POST",
             headers: {
@@ -63,16 +86,25 @@ if (!message.trim()) {
             body: JSON.stringify({message: message})
         });
 
-        const data = await response.json();
-        console.log(data);
-        if (response.ok) {
-            setStatusMessage(data.message);
-            setPosts([...posts, data.posts]);
-            setMessage("");
+        
+const data = await response.json();
 
-        } else {
-            setStatusMessage(data.message || "Failed to create post.");
-        }
+if (response.status === 401) {
+    localStorage.removeItem("token");
+    setToken(null);
+    setStatusMessage("Oops, mate! Your session has expired. Please log in again.");
+    return;
+}
+
+if (response.ok) {
+    setStatusMessage(data.message);
+    setPosts([...posts, data.posts]);
+    setMessage("");
+} else {
+    setStatusMessage(data.message || "Failed to create post.");
+}
+
+
     };
 
     const handleDelete = async (postId) => {
@@ -117,6 +149,10 @@ if (!message.trim()) {
                 
 {posts.map((post) => (
     <div className="post-card" key={post._id}>
+        <p className="post-author">
+            {post.user?.name || "Unknown User"}
+        </p>
+
         <p className="post-message">{post.message}</p>
 
         <button onClick={() => handleDelete(post._id)}>
@@ -124,7 +160,6 @@ if (!message.trim()) {
         </button>
     </div>
 ))}
-
 
             </div>
             

@@ -23,7 +23,9 @@ function Navbar({title, token, setToken}) {
           {token ? (
            <>
           <Link to="/profile">Profile</Link>
-           <button onClick={handleLogout}>Logout</button>
+           <button className="nav-link-button" onClick={handleLogout}>
+    Logout
+</button>
            </>
          ) : (
         <>

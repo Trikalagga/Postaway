@@ -1,0 +1,24 @@
+.my-posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 90%;
+    max-width: 600px;
+    margin: 15px auto;
+}
+
+.my-post-card {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow-wrap: anywhere;
+}
+
+.my-post-message {
+    margin: 0 0 10px;
+}
+
+.my-post-date {
+    color: #666;
+    font-size: 12px;
+}
